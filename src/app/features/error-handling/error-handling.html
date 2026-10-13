@@ -1,41 +1,94 @@
-<a class="back" routerLink="/">← Back</a>
-<h1>Error handling</h1>
-<p class="sub">Every 3rd request fails. Where you put the handling decides what survives.</p>
+<a class="back" routerLink="/">← All topics</a>
+<header class="lesson-hero">
+  <p class="eyebrow">04 · Errors &amp; recovery</p>
+  <h1>Keep one failure from taking down the whole experience.</h1>
+  <p class="sub">An Observable error ends that stream. Where you catch the error determines whether future user actions can still work.</p>
+</header>
 
-<h3>1 · catchError: outside vs inside switchMap</h3>
-<p class="sub">Click Search 3 times. Then keep clicking and see which lane still responds.</p>
-<div class="controls"><button (click)="search()">Search</button></div>
-<section class="board">
-    <app-marble-lane name="clicks" [events]="clicks.events()" />
-    @for (lane of lanes; track lane.name) {
-    <div class="block">
-        <h2>{{ lane.name }} <small>{{ lane.hint }}</small></h2>
-        <app-marble-lane name="result" [events]="lane.recorder.events()" />
-        <p class="stats">stream: {{ lane.alive() ? 'alive' : 'DEAD (ignores clicks)' }}</p>
+<section class="lesson-intro">
+  <article class="definition-card">
+    <p class="section-kicker">In plain language</p>
+    <h2>An error is an ending — unless you handle it.</h2>
+    <p>Catch an error around a long-lived stream and that whole stream may stop. Catch it inside one request instead, and the outer stream can keep listening for the next action.</p>
+  </article>
+  <aside class="scenario-card">
+    <p class="section-kicker">Real-world example</p>
+    <h2>A search box that survives</h2>
+    <p>If one search request fails, the user should still be able to type another query and try again.</p>
+  </aside>
+</section>
+
+<section class="demo-card" aria-labelledby="catch-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Lab 1 · Where to catch</p>
+      <h2 id="catch-lab-title">Compare catchError placement</h2>
+      <p>Every third request fails. Keep searching after the failure and see which stream is still listening.</p>
     </div>
-    }
+  </div>
+  <div class="demo-body">
+    <div class="controls"><button (click)="search()">Search again</button></div>
+    <section class="board">
+      <app-marble-lane name="search clicks" [events]="clicks.events()" />
+      @for (lane of lanes; track lane.name) {
+        <div class="block">
+          <h2>{{ lane.name }} <small>{{ lane.hint }}</small></h2>
+          <app-marble-lane name="result" [events]="lane.recorder.events()" />
+          <p class="stats">Listener: {{ lane.alive() ? 'ready for another search' : 'stopped after the error' }}</p>
+        </div>
+      }
+    </section>
+    <aside class="takeaway">
+      <h2>Rule of thumb</h2>
+      <p>For user-triggered requests, put catchError inside the flattening operator. That handles one request’s failure without replacing or ending the outer click stream.</p>
+    </aside>
+  </div>
 </section>
 
-<h3>2 · retry with exponential backoff</h3>
-<p class="sub">Fails twice, succeeds on attempt 3. Waits 500ms, then 1000ms between attempts.</p>
-<div class="controls"><button (click)="runRetry()">Run flaky call</button></div>
-<section class="board">
-    <app-marble-lane name="result" [events]="retryRec.events()" />
-    <p class="stats">attempts made: {{ attempts() }}</p>
+<section class="demo-card" aria-labelledby="retry-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Lab 2 · Retry carefully</p>
+      <h2 id="retry-lab-title">Give a flaky request another chance</h2>
+      <p>This example fails twice and succeeds on attempt three. The delay grows each time: 500 ms, then 1 second.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <div class="controls"><button (click)="runRetry()">Run request with retry</button></div>
+    <section class="board">
+      <app-marble-lane name="attempts" [events]="retryRec.events()" />
+      <p class="stats">Attempts made: {{ attempts() }}</p>
+    </section>
+    <p class="meta">Retries help with temporary network hiccups, but use a limit and a delay so a persistent failure does not create a request storm.</p>
+  </div>
 </section>
 
-<h3>3 · Errors as values</h3>
-<p class="sub">The stream never dies. The UI just reads a state object. Every 3rd click fails.</p>
-<div class="controls"><button (click)="load()">Load</button></div>
-<section class="board">
-    @let s = state();
-    @if (s.status === 'idle') {
-    <p class="big">Press Load.</p>
-    } @else if (s.status === 'loading') {
-    <p class="big">Loading…</p>
-    } @else if (s.status === 'success') {
-    <p class="big">✅ Got <strong>{{ s.data }}</strong></p>
-    } @else if (s.status === 'error') {
-    <p class="big">❌ {{ s.message }}</p>
-    }
+<section class="demo-card" aria-labelledby="state-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Lab 3 · Show errors as UI state</p>
+      <h2 id="state-lab-title">Give the screen a useful state for every outcome</h2>
+      <p>Instead of letting the request error escape, turn it into a state the interface can explain and recover from.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <div class="controls"><button (click)="load()">Load data</button></div>
+    <section class="board" aria-live="polite">
+      @let result = state();
+      @if (result.status === 'idle') {
+        <p class="big">Ready when you are. Press <strong>Load data</strong>.</p>
+      } @else if (result.status === 'loading') {
+        <p class="big">Getting your data…</p>
+      } @else if (result.status === 'success') {
+        <p class="big">All set — received <strong>{{ result.data }}</strong>.</p>
+      } @else if (result.status === 'error') {
+        <p class="big">That didn’t work: <strong>{{ result.message }}</strong></p>
+      }
+    </section>
+    <aside class="takeaway">
+      <h2>What the user sees</h2>
+      <p>Loading, success, and error are all ordinary states the UI can render. A clear message and a retry action are much friendlier than a blank screen.</p>
+    </aside>
+  </div>
 </section>
+<a class="topic-next" routerLink="/performance">Next up: performance and cleanup →</a>

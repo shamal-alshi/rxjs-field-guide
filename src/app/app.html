@@ -1,1 +1,17 @@
-<router-outlet />
+<header class="site-header">
+  <a class="brand" routerLink="/" aria-label="RxJS Field Guide home">
+    <span class="brand-mark" aria-hidden="true">rx</span>
+    <span>RxJS <span class="brand-light">Field Guide</span></span>
+  </a>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Overview</a>
+    <a routerLink="/creation-and-subjects" routerLinkActive="active">Subjects</a>
+    <a routerLink="/cold-and-hot" routerLinkActive="active">Cold vs hot</a>
+    <a routerLink="/flattening" routerLinkActive="active">Flattening</a>
+    <a routerLink="/error-handling" routerLinkActive="active">Errors</a>
+    <a routerLink="/performance" routerLinkActive="active">Performance</a>
+  </nav>
+</header>
+<main>
+  <router-outlet />
+</main>

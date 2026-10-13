@@ -17,8 +17,8 @@ interface Row {
   selector: 'app-creation-and-subjects',
   imports: [MarbleLane, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'page' },
   templateUrl: './creation-and-subjects.html',
-  styleUrl: './creation-and-subjects.scss',
 })
 export class CreationAndSubjects {
   private readonly destroyRef = inject(DestroyRef);

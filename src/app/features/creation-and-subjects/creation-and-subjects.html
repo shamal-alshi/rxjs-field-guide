@@ -1,22 +1,54 @@
-<a class="back" routerLink="/">← Back</a>
-<h1>Subjects</h1>
-<p class="sub">Emit a few values, then let a late subscriber join. See who receives what.</p>
+<a class="back" routerLink="/">← All topics</a>
+<header class="lesson-hero">
+  <p class="eyebrow">01 · Subjects &amp; shared state</p>
+  <h1>Who gets to hear the stream?</h1>
+  <p class="sub">A Subject lets you send values to many listeners. Its different flavors decide whether a late listener hears only what happens next — or gets some history too.</p>
+</header>
 
-<div class="controls">
-  <button (click)="emit()">Emit next value</button>
-  <button (click)="joinLate()" [disabled]="lateJoined()">Late subscriber joins</button>
-  <button (click)="complete()">Complete</button>
-  <button class="ghost" (click)="reset()">Reset</button>
-</div>
-
-<section class="board">
-  <app-marble-lane name="source" [events]="source().events()" />
-
-  @for (row of rows(); track row.name) {
-    <div class="block">
-      <h2>{{ row.name }} <small>{{ row.hint }}</small></h2>
-      <app-marble-lane name="early" [events]="row.early.events()" />
-      <app-marble-lane name="late" [events]="row.late.events()" />
-    </div>
-  }
+<section class="lesson-intro">
+  <article class="definition-card">
+    <p class="section-kicker">In plain language</p>
+    <h2>A Subject is like a live group chat.</h2>
+    <p>People who are listening now hear new messages. If someone joins late, a regular Subject doesn’t replay old messages. Choose a replaying Subject when a new listener needs the latest state or a little history.</p>
+  </article>
+  <aside class="scenario-card">
+    <p class="section-kicker">Real-world example</p>
+    <h2>Think of a live dashboard</h2>
+    <p>A new chart may need the current temperature immediately, while an activity feed may want the last few events.</p>
+  </aside>
 </section>
+
+<section class="demo-card" aria-labelledby="subject-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Interactive lab</p>
+      <h2 id="subject-lab-title">Bring in a late subscriber</h2>
+      <p>Send a few values, add the late listener, and compare each Subject. Complete the stream to see how AsyncSubject behaves.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <div class="controls">
+      <button (click)="emit()">Send a value</button>
+      <button class="ghost" (click)="joinLate()" [disabled]="lateJoined()">Add late listener</button>
+      <button class="ghost" (click)="complete()">Finish stream</button>
+      <button class="ghost" (click)="reset()">Start over</button>
+    </div>
+
+    <section class="board">
+      <app-marble-lane name="values sent" [events]="source().events()" />
+
+      @for (row of rows(); track row.name) {
+        <div class="block">
+          <h2>{{ row.name }} <small>{{ row.hint }}</small></h2>
+          <app-marble-lane name="early listener" [events]="row.early.events()" />
+          <app-marble-lane name="late listener" [events]="row.late.events()" />
+        </div>
+      }
+    </section>
+    <aside class="takeaway">
+      <h2>What to notice</h2>
+      <p>Subject forgets; BehaviorSubject immediately gives its current value; ReplaySubject replays its configured history; AsyncSubject waits for completion and then gives the final value.</p>
+    </aside>
+  </div>
+</section>
+<a class="topic-next" routerLink="/cold-and-hot">Next up: cold vs. hot streams →</a>

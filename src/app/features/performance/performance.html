@@ -1,39 +1,90 @@
-<a class="back" routerLink="/">← Back</a>
-<h1>Performance &amp; cleanup</h1>
+<a class="back" routerLink="/">← All topics</a>
+<header class="lesson-hero">
+  <p class="eyebrow">05 · Performance &amp; cleanup</p>
+  <h1>Keep streams useful, not noisy.</h1>
+  <p class="sub">Healthy RxJS code does more than produce the right value. It also stops work when it’s no longer needed and avoids doing more work than the UI can use.</p>
+</header>
 
-<h3>1 · Subscription leaks</h3>
-<p class="sub">Mount a ticker, destroy it, and watch the counter. Mount the leaky one repeatedly.</p>
-<div class="controls">
-    <button (click)="showLeaky.set(!showLeaky())">{{ showLeaky() ? 'Destroy' : 'Mount' }} leaky ticker</button>
-    <button (click)="showClean.set(!showClean())">{{ showClean() ? 'Destroy' : 'Mount' }} clean ticker</button>
-</div>
-<section class="board">
-    <p class="big">Active subscriptions: <strong>{{ monitor.active() }}</strong></p>
-    @if (showLeaky()) { <app-leaky-ticker /> }
-    @if (showClean()) { <app-clean-ticker /> }
+<section class="lesson-intro">
+  <article class="definition-card">
+    <p class="section-kicker">In plain language</p>
+    <h2>Every subscription is work with a lifetime.</h2>
+    <p>When a component disappears, its timers and listeners should usually stop too. For fast events, choose whether to keep the first, last, or most recent value in a time window.</p>
+  </article>
+  <aside class="scenario-card">
+    <p class="section-kicker">Real-world example</p>
+    <h2>Search without wasted work</h2>
+    <p>Typing can fire many keyboard events. Debouncing waits for a pause before searching, while teardown prevents hidden screens from keeping subscriptions alive.</p>
+  </aside>
 </section>
 
-<h3>2 · Taming noisy events</h3>
-<p class="sub">Move your mouse over the box. Compare how many events each operator lets through.</p>
-<div class="zone" (mousemove)="onMove()">Move your mouse here · {{ total() }} events</div>
-<section class="board">
-    @for (lane of lanes; track lane.name) {
-    <div class="block">
-        <app-marble-lane [name]="lane.name" [events]="lane.recorder.events()" [durationMs]="2500" />
-        <p class="meta">
+<section class="demo-card" aria-labelledby="cleanup-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Lab 1 · Subscription lifetimes</p>
+      <h2 id="cleanup-lab-title">Mount a ticker, then remove it</h2>
+      <p>Compare a ticker that keeps running after removal with one that cleans itself up.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <div class="controls">
+      <button (click)="showLeaky.set(!showLeaky())">{{ showLeaky() ? 'Remove' : 'Mount' }} leaky ticker</button>
+      <button class="ghost" (click)="showClean.set(!showClean())">{{ showClean() ? 'Remove' : 'Mount' }} clean ticker</button>
+    </div>
+    <section class="board">
+      <p class="big">Active subscriptions: <strong>{{ monitor.active() }}</strong></p>
+      @if (showLeaky()) { <app-leaky-ticker /> }
+      @if (showClean()) { <app-clean-ticker /> }
+    </section>
+    <aside class="takeaway">
+      <h2>What to notice</h2>
+      <p>A component-owned subscription should end with its component. Angular’s <code>takeUntilDestroyed()</code> is one way to bind that lifetime automatically.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="demo-card" aria-labelledby="events-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Lab 2 · Tame rapid events</p>
+      <h2 id="events-lab-title">Move your pointer and compare the filters</h2>
+      <p>Move across the area below. Each lane shows how a different timing operator reduces or selects the events.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <div class="zone" (pointermove)="onMove()">Move your pointer here · {{ total() }} events received</div>
+    <section class="board">
+      @for (lane of lanes; track lane.name) {
+        <div class="block">
+          <app-marble-lane [name]="lane.name" [events]="lane.recorder.events()" [durationMs]="2500" />
+          <p class="meta">
             <span>{{ lane.hint }}</span>
             <span class="stats">passed {{ lane.emitted() }}</span>
-        </p>
-    </div>
-    }
+          </p>
+        </div>
+      }
+    </section>
+  </div>
 </section>
 
-<h3>3 · shareReplay and refCount</h3>
-<p class="sub">Start watching, then stop. See which source keeps running with nobody listening.</p>
-<div class="controls">
-    <button (click)="toggleWatch()">{{ watching() ? 'Stop watching' : 'Start watching' }}</button>
-</div>
-<section class="board">
-    <p class="stats">shareReplay(1) → source subscriptions: {{ plainActive() }}</p>
-    <p class="stats">shareReplay with refCount: true → source subscriptions: {{ refCountActive() }}</p>
+<section class="demo-card" aria-labelledby="replay-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Lab 3 · Sharing cached values</p>
+      <h2 id="replay-lab-title">Does the source stop when nobody is watching?</h2>
+      <p>Start watching, then stop. Compare a replaying stream with and without reference counting.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <div class="controls"><button (click)="toggleWatch()">{{ watching() ? 'Stop watching' : 'Start watching' }}</button></div>
+    <section class="board">
+      <p class="stats">shareReplay(1) → active source subscriptions: {{ plainActive() }}</p>
+      <p class="stats">shareReplay with refCount: true → active source subscriptions: {{ refCountActive() }}</p>
+    </section>
+    <aside class="takeaway">
+      <h2>Choose cache behavior intentionally</h2>
+      <p>shareReplay can retain the latest value, but its subscription lifetime depends on configuration. With refCount enabled, the shared source disconnects when its last subscriber leaves.</p>
+    </aside>
+  </div>
 </section>
+<a class="topic-next" routerLink="/creation-and-subjects">Review the learning path from the beginning →</a>

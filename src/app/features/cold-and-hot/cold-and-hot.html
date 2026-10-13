@@ -1,22 +1,52 @@
-<a class="back" routerLink="/">← Back</a>
-<h1>Cold vs hot</h1>
-<p class="sub">
-  Subscribe A, then B. Try B while the request is still running (1.5s), and again after it has finished.
-</p>
+<a class="back" routerLink="/">← All topics</a>
+<header class="lesson-hero">
+  <p class="eyebrow">02 · Cold vs. hot streams</p>
+  <h1>One stream, or one per listener?</h1>
+  <p class="sub">A cold Observable starts its work for each subscriber. A hot, shared Observable lets multiple subscribers listen to the same work already in progress.</p>
+</header>
 
-<div class="controls">
-  <button (click)="subscribe('a')">Subscribe A</button>
-  <button (click)="subscribe('b')">Subscribe B</button>
-  <button class="ghost" (click)="reset()">Reset</button>
-</div>
-
-<section class="board">
-  @for (v of variants(); track v.name) {
-    <div class="block">
-      <h2>{{ v.name }} <small>{{ v.hint }}</small></h2>
-      <app-marble-lane name="A" [events]="v.a.events()" />
-      <app-marble-lane name="B" [events]="v.b.events()" />
-      <p class="stats">HTTP calls made: {{ v.requests() }}</p>
-    </div>
-  }
+<section class="lesson-intro">
+  <article class="definition-card">
+    <p class="section-kicker">In plain language</p>
+    <h2>Cold is “make me one”; hot is “join the one that’s running.”</h2>
+    <p>Each subscription to a cold stream is like placing a separate order. Sharing operators let listeners ride the same request instead of starting another one.</p>
+  </article>
+  <aside class="scenario-card">
+    <p class="section-kicker">Real-world example</p>
+    <h2>Prevent duplicate API calls</h2>
+    <p>If a page header and chart both subscribe to the same cold HTTP stream, the server may get two requests. Sharing can make one request serve both.</p>
+  </aside>
 </section>
+
+<section class="demo-card" aria-labelledby="sharing-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Interactive lab</p>
+      <h2 id="sharing-lab-title">Subscribe A, then subscribe B</h2>
+      <p>The simulated request takes 1.5 seconds. Try B before it finishes and again after it finishes. Watch the request count.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <div class="controls">
+      <button (click)="subscribe('a')">Subscribe A</button>
+      <button (click)="subscribe('b')">Subscribe B</button>
+      <button class="ghost" (click)="reset()">Reset experiment</button>
+    </div>
+
+    <section class="board">
+      @for (variant of variants(); track variant.name) {
+        <div class="block">
+          <h2>{{ variant.name }} <small>{{ variant.hint }}</small></h2>
+          <app-marble-lane name="listener A" [events]="variant.a.events()" />
+          <app-marble-lane name="listener B" [events]="variant.b.events()" />
+          <p class="stats">Requests started: {{ variant.requests() }}</p>
+        </div>
+      }
+    </section>
+    <aside class="takeaway">
+      <h2>What to notice</h2>
+      <p>Plain cold streams make a new request per subscriber. share() shares an in-flight request but forgets it after completion. shareReplay(1) can also give a late subscriber the last result.</p>
+    </aside>
+  </div>
+</section>
+<a class="topic-next" routerLink="/flattening">Next up: handling overlapping work →</a>

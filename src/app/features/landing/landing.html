@@ -1,20 +1,61 @@
-<header class="hero">
-  <p class="eyebrow">RxJS Field Guide</p>
-  <h1>Stop guessing which operator to use.</h1>
-  <p class="sub">Every topic starts with a real problem, shows the version that breaks, then the fix, live.</p>
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="live-dot"></span> A hands-on guide to RxJS</p>
+    <h1>Make sense of streams.<br /><span>One real example at a time.</span></h1>
+    <p class="hero-sub">
+      RxJS can feel abstract until you see what your data is doing. Explore friendly explanations,
+      everyday scenarios, and little experiments you can try right here.
+    </p>
+    <a class="primary-link" routerLink="creation-and-subjects">Start with the basics <span aria-hidden="true">→</span></a>
+    <p class="hero-note">No setup needed. Just choose a topic and explore.</p>
+  </div>
 
-  <div class="demo" aria-label="Live demo: interval piped through map">
-    <app-marble-lane name="interval(1200)" [events]="source.events()" />
-    <code class="op">map(n =&gt; n * 10)</code>
+  <aside class="scenario-card hero-note-card">
+    <p class="section-kicker">A simple mental model</p>
+    <h2>Think of a stream like a timeline of events.</h2>
+    <p>Values arrive over time. Operators shape those values before they reach your screen.</p>
+    <div class="mini-flow" aria-label="Values flow through an operator to your UI">
+      <span>events</span><span class="flow-arrow" aria-hidden="true">→</span><span>operator</span><span class="flow-arrow" aria-hidden="true">→</span><span>UI</span>
+    </div>
+  </aside>
+</section>
+
+<section class="live-demo" aria-labelledby="live-demo-title">
+  <div class="section-heading">
+    <div>
+      <p class="section-kicker">See a stream in motion</p>
+      <h2 id="live-demo-title">From source to result</h2>
+    </div>
+    <p>Each dot is a value moving through the pipeline.</p>
+  </div>
+  <div class="demo">
+    <app-marble-lane name="source" [events]="source.events()" />
+    <div class="operator-pill"><code>map(n =&gt; n × 10)</code><span>transform each value</span></div>
     <app-marble-lane name="output" [events]="output.events()" />
   </div>
-</header>
+</section>
 
-<section class="topics">
-  @for (t of topics; track t.path) {
-    <a class="card" [routerLink]="t.path">
-      <h2>{{ t.title }}</h2>
-      <p>{{ t.question }}</p>
-    </a>
-  }
+<section class="topics-section" aria-labelledby="topics-title">
+  <div class="section-heading topics-heading">
+    <div>
+      <p class="section-kicker">Your learning path</p>
+      <h2 id="topics-title">Pick a question you’ve actually had</h2>
+    </div>
+    <p>Short explanations, real use cases, and interactive labs — all in one place.</p>
+  </div>
+  <div class="topics">
+    @for (topic of topics; track topic.path) {
+      <a class="card" [routerLink]="topic.path">
+        <div class="card-top"><span>{{ topic.tag }}</span><span class="card-number">{{ topic.number }}</span></div>
+        <h3>{{ topic.title }}</h3>
+        <p class="card-question">{{ topic.question }}</p>
+        <p class="card-example"><strong>In real apps:</strong> {{ topic.example }}</p>
+        <span class="card-link">Explore topic <span aria-hidden="true">↗</span></span>
+      </a>
+    }
+  </div>
+</section>
+
+<section class="takeaway closing-note">
+  <p><strong>New to RxJS?</strong> Start with subjects, then follow the path. You don’t need to memorize operators — learn the behavior you need, and the right operator gets easier to spot.</p>
 </section>

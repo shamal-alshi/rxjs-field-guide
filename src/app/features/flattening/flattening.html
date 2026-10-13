@@ -1,19 +1,50 @@
-<a class="back" routerLink="/">← Back</a>
-<h1>Flattening operators</h1>
-<p class="sub">Click fast. Watch what each operator does with overlapping requests.</p>
+<a class="back" routerLink="/">← All topics</a>
+<header class="lesson-hero">
+  <p class="eyebrow">03 · Flattening operators</p>
+  <h1>What should happen to overlapping requests?</h1>
+  <p class="sub">When an event starts async work, a flattening operator decides whether to cancel, queue, run alongside, or ignore the next event.</p>
+</header>
 
-<button class="send" (click)="send()">Send request</button>
-
-<section class="board">
-  <app-marble-lane name="clicks" [events]="clicks.events()" />
-
-  @for (lane of lanes; track lane.name) {
-    <div class="lane-block">
-      <app-marble-lane [name]="lane.name" [events]="lane.recorder.events()" />
-      <p class="meta">
-        <span>{{ lane.hint }}</span>
-        <span class="stats">started {{ lane.started() }} · completed {{ lane.completed() }}</span>
-      </p>
-    </div>
-  }
+<section class="lesson-intro">
+  <article class="definition-card">
+    <p class="section-kicker">In plain language</p>
+    <h2>Pick a rule for what “next” means.</h2>
+    <p>Search might care only about your latest words. A file uploader may need to finish every upload. The operator is the policy that turns incoming actions into async work.</p>
+  </article>
+  <aside class="scenario-card">
+    <p class="section-kicker">Quick memory aid</p>
+    <h2>Latest · All · In order · First</h2>
+    <p><code>switchMap</code> latest · <code>mergeMap</code> all · <code>concatMap</code> in order · <code>exhaustMap</code> first while busy.</p>
+  </aside>
 </section>
+
+<section class="demo-card" aria-labelledby="flattening-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Interactive lab</p>
+      <h2 id="flattening-lab-title">Send a burst of requests</h2>
+      <p>Click several times while each request is still running. The lanes show which requests each operator starts and which results arrive.</p>
+    </div>
+    <button class="send" (click)="send()">Send request</button>
+  </div>
+  <div class="demo-body">
+    <section class="board">
+      <app-marble-lane name="clicks" [events]="clicks.events()" />
+
+      @for (lane of lanes; track lane.name) {
+        <div class="lane-block">
+          <app-marble-lane [name]="lane.name" [events]="lane.recorder.events()" />
+          <p class="meta">
+            <span>{{ lane.hint }}</span>
+            <span class="stats">started {{ lane.started() }} · completed {{ lane.completed() }}</span>
+          </p>
+        </div>
+      }
+    </section>
+    <aside class="takeaway">
+      <h2>How to choose</h2>
+      <p>Use switchMap for replaceable work like search. Use mergeMap when every task matters and can run concurrently. Use concatMap when order matters. Use exhaustMap to ignore repeat submits while one is underway.</p>
+    </aside>
+  </div>
+</section>
+<a class="topic-next" routerLink="/error-handling">Next up: handling failures gracefully →</a>

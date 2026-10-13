@@ -20,8 +20,8 @@ interface Lane {
   selector: 'app-flattening',
   imports: [MarbleLane, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'page' },
   templateUrl: './flattening.html',
-  styleUrl: './flattening.scss',
 })
 export class Flattening {
   private readonly click$ = new Subject<number>();

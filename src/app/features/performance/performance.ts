@@ -24,10 +24,10 @@ interface RateLane {
   host: { class: 'page' },
   styles: `
     .zone {
-      display: grid; place-items: center; height: 9rem; border: 2px dashed #2a3042; border-radius: 1rem;
-      color: #8b93a7; user-select: none; background: #11151f;
+      display: grid; place-items: center; min-height: 9rem; padding: 1rem; border: 2px dashed #39415b;
+      border-radius: 1rem; color: #a1a8bd; user-select: none; background: #141b2d; text-align: center;
     }
-    .zone:hover { border-color: #5eead4; }
+    .zone:hover { border-color: #9078ff; background: #1d1933; }
   `,
   templateUrl: './performance.html',
 })
