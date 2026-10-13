@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # RxJS Field Guide
 
 > Learn RxJS by watching streams in action.
@@ -164,3 +165,7 @@ This is a personal learning and portfolio project. Suggestions and constructive 
 ## License
 
 A license has not been selected yet. Add a `LICENSE` file before presenting the project as open source.
+=======
+# rxjs-field-guide
+An interactive RxJS learning guide with animated marble diagrams and real-world operator demos.
+>>>>>>> e38e81a66bd81b429f44019d5e696b013a1170d0
