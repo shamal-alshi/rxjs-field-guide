@@ -1,171 +1,69 @@
-<<<<<<< HEAD
 # RxJS Field Guide
 
-> Learn RxJS by watching streams in action.
+An interactive, dark-themed learning app for understanding RxJS through plain-language explanations and hands-on stream visualizations.
 
-**RxJS Field Guide** is an interactive learning app that explains RxJS concepts through real-world problems, runnable examples, and animated marble-style visualizations. Instead of memorizing operator definitions, you can see how values move through a stream and how different operators change the result.
+## What is this project about?
 
-> **Project status:** In development. Features listed below are planned until implemented.
+RxJS is a library for working with values that arrive over time: button clicks, keystrokes, network responses, timers, and many other events. Its operators let an app transform those values, combine them, handle failures, and manage asynchronous work.
 
-## Why this project?
+Those ideas can be hard to picture from definitions alone. The RxJS Field Guide makes them visible: each lesson starts with a familiar problem, explains the idea in human-friendly language, and gives you an interactive experiment. Animated marble lanes show values moving through a stream, while counters and UI states make the result easier to compare.
 
-RxJS operators can feel abstract when you only read their definitions. This project aims to make them easier to understand by pairing each concept with:
+The demos are educational and run in the browser. Requests shown in the labs are simulated; they do not call a real API.
 
-- A practical problem to solve
-- A naive approach and why it can fail
-- A better RxJS solution
-- Code you can read alongside the demo
-- Animated values (“marbles”) moving through a stream
-- Visible event logs and counters where useful
+## Learning topics
 
-## Planned learning modules
+| Topic | What you can explore |
+| --- | --- |
+| Subjects and shared state | Compare `Subject`, `BehaviorSubject`, `ReplaySubject`, and `AsyncSubject`, including what late subscribers receive. |
+| Cold vs. hot streams | Compare per-subscriber work with `share()` and `shareReplay()` using a simulated request. |
+| Flattening operators | See how `switchMap`, `mergeMap`, `concatMap`, and `exhaustMap` handle overlapping work. |
+| Errors and recovery | Compare `catchError` placement, retry a flaky request, and render loading/success/error states. |
+| Performance and cleanup | Explore subscription lifetimes, event-rate operators, and `shareReplay` reference counting. |
 
-### 1. Creation functions and Subjects
-- `of()` vs `from()`
-- `fromEvent()`, `timer()`, `interval()`, and `defer()`
-- `Subject`, `BehaviorSubject`, `ReplaySubject`, and `AsyncSubject`
-- Cold vs hot Observables
-- Multicasting with `share()` and `shareReplay()`
+## Run locally
 
-### 2. Flattening operators
-Compare the same sequence of triggers with:
-- `switchMap` — switch to the latest inner Observable; useful for search
-- `mergeMap` — run inner Observables concurrently; useful for independent work
-- `concatMap` — queue inner Observables and process them in order
-- `exhaustMap` — ignore new triggers while the current inner Observable is active
+### Requirements
 
-The visual demo will show active, completed, queued, ignored, and cancelled work where applicable.
+- Node.js and npm
 
-### 3. Error handling
-- `catchError()` inside vs outside a flattening operator
-- `retry()` and delayed retries
-- `finalize()`, `EMPTY`, and `throwError()`
-- Representing loading, success, and error states as values
-
-### 4. Performance and cleanup
-- Subscription cleanup with `takeUntilDestroyed()`
-- `async` pipe and `toSignal()`
-- `debounceTime()`, `throttleTime()`, `auditTime()`, and `sampleTime()`
-- `distinctUntilChanged()`
-- `shareReplay({ bufferSize: 1, refCount: true })`
-- Exploring Angular change detection, `OnPush`, and Signals
-
-## What is a marble?
-
-A marble is a visual marker for a value emitted by an Observable. For example, `of(10, 20, 30)` emits three values, so the visualization can show three marbles travelling through a source lane, an operator, and an output lane.
-
-The app will use animation to make stream behaviour visible. RxJS determines when values are emitted; the UI records those events; CSS animates their visual representation.
-
-## Tech stack
-
-Planned stack:
-
-- Angular with standalone components and built-in template control flow (`@if` / `@for`)
-- TypeScript
-- RxJS
-- Angular Signals for local reactive UI state where appropriate
-- HTML and CSS animations
-- Angular Router for learning modules
-
-The initial version is intended to run entirely in the browser. No AI service, backend, or database is required.
-
-## Getting started
-
-### Prerequisites
-
-- Node.js compatible with the Angular version used by this project
-- npm
-- Angular CLI (optional globally; you can also use `npx`)
-
-### Run locally
-
-Once the Angular application has been created or cloned:
+### Start the development server
 
 ```bash
 npm install
 npm start
 ```
 
-If the project does not define an `npm start` script, use:
+Open the local URL printed by Angular CLI (usually [http://localhost:4200](http://localhost:4200)).
+
+## Useful commands
 
 ```bash
-npx ng serve
+npm start       # Run the development server
+npm run build   # Build the app (including prerendered routes)
+npm test        # Run the unit tests
+npm run watch   # Rebuild when source files change
 ```
 
-Then open the local URL printed by the Angular CLI, usually `http://localhost:4200`.
+## Built with
 
-> These commands assume the Angular project files (`package.json`, `angular.json`, and `src/`) are present in the repository.
+- Angular standalone components, Signals, and Angular Router
+- RxJS 7
+- TypeScript
+- SCSS and CSS animations
 
-## Planned project structure
-
-The exact structure may evolve as the app grows.
+## Project structure
 
 ```text
 src/
-└── app/
-    ├── core/
-    │   └── marble/
-    │       ├── marble.model.ts
-    │       └── marble-recorder.ts
-    ├── shared/
-    │   └── ui/
-    │       ├── marble-lane/
-    │       ├── demo-panel/
-    │       └── code-block/
-    ├── features/
-    │   ├── landing/
-    │   ├── creation-and-subjects/
-    │   ├── flattening/
-    │   ├── error-handling/
-    │   └── performance/
-    ├── app.config.ts
-    └── app.routes.ts
+├── app/
+│   ├── core/                 # Marble event recording and demo helpers
+│   ├── features/             # Landing page and topic lessons
+│   ├── shared/ui/            # Reusable marble-lane visualization
+│   ├── app.routes.ts         # Lazy-loaded lesson routes
+│   └── app.html              # Shared navigation and router outlet
+└── styles.scss               # Global theme and shared lesson styles
 ```
 
-### Architecture at a glance
+## Learning approach
 
-- **Feature pages** explain a concept and configure its demo.
-- **Demo panel** brings together the problem, code, event log, and counters.
-- **Marble lane** displays and animates recorded events.
-- **Marble recorder** captures relevant event information for the visualizer.
-- **Angular Router** loads feature pages as needed.
-
-The visual layer should explain the stream, not replace the real RxJS implementation. Each demo should be driven by the actual Observable pipeline wherever practical.
-
-## Development roadmap
-
-- [ ] Create the Angular app and establish the visual theme
-- [ ] Build the landing page and navigation
-- [ ] Build a reusable animated marble lane
-- [ ] Add Run and Reset controls
-- [ ] Demonstrate a simple source and transformation (`of()` + `map()`)
-- [ ] Build the four flattening-operator comparison lanes
-- [ ] Add error-handling demos
-- [ ] Add Subjects and cold-vs-hot demos
-- [ ] Add performance and subscription-cleanup demos
-- [ ] Add responsive styling, accessibility checks, and reduced-motion support
-- [ ] Write tests and document lessons learned
-
-## Learning goals
-
-By building this project, I want to strengthen my understanding of:
-
-- Observable creation and subscription behaviour
-- RxJS operator selection and composition
-- Cancellation, concurrency, and sequencing
-- Error handling and stream recovery
-- Subscription lifecycle and performance
-- Angular standalone architecture, Signals, and change detection
-- Reusable components and data-driven UI design
-
-## Contributing
-
-This is a personal learning and portfolio project. Suggestions and constructive feedback are welcome.
-
-## License
-
-A license has not been selected yet. Add a `LICENSE` file before presenting the project as open source.
-=======
-# rxjs-field-guide
-An interactive RxJS learning guide with animated marble diagrams and real-world operator demos.
->>>>>>> e38e81a66bd81b429f44019d5e696b013a1170d0
+Try the experiment before reading the takeaway. Change the inputs, watch what happens, then connect the behavior to the operator. The goal is not to memorize every operator, but to recognize the behavior a real application needs and choose an operator that matches it.
