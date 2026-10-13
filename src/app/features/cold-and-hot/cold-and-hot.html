@@ -1,0 +1,22 @@
+<a class="back" routerLink="/">← Back</a>
+<h1>Cold vs hot</h1>
+<p class="sub">
+  Subscribe A, then B. Try B while the request is still running (1.5s), and again after it has finished.
+</p>
+
+<div class="controls">
+  <button (click)="subscribe('a')">Subscribe A</button>
+  <button (click)="subscribe('b')">Subscribe B</button>
+  <button class="ghost" (click)="reset()">Reset</button>
+</div>
+
+<section class="board">
+  @for (v of variants(); track v.name) {
+    <div class="block">
+      <h2>{{ v.name }} <small>{{ v.hint }}</small></h2>
+      <app-marble-lane name="A" [events]="v.a.events()" />
+      <app-marble-lane name="B" [events]="v.b.events()" />
+      <p class="stats">HTTP calls made: {{ v.requests() }}</p>
+    </div>
+  }
+</section>

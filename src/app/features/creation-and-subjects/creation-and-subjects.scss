@@ -1,0 +1,80 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background: #0b0e17;
+    color: #e2e8f0;
+    padding: 3rem 1.5rem;
+    max-width: 56rem;
+    margin: 0 auto;
+}
+
+.back {
+    color: #5eead4;
+    text-decoration: none;
+    font-size: .9rem;
+}
+
+h1 {
+    margin: .75rem 0 .25rem;
+}
+
+.sub {
+    color: #8b93a7;
+    margin: 0 0 1.5rem;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+}
+
+button {
+    padding: .6rem 1.1rem;
+    border: 0;
+    border-radius: .6rem;
+    background: #5eead4;
+    color: #0b0e17;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:disabled {
+        opacity: .4;
+        cursor: not-allowed;
+    }
+
+    &.ghost {
+        background: transparent;
+        color: #8b93a7;
+        border: 1px solid #2a3042;
+    }
+}
+
+.board {
+    margin-top: 2rem;
+    display: grid;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid #2a3042;
+    border-radius: 1rem;
+    background: #11151f;
+}
+
+.block {
+    display: grid;
+    gap: .25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #1b2132;
+}
+
+h2 {
+    margin: 0 0 .25rem;
+    font: 600 .95rem ui-monospace, monospace;
+    color: #fbbf24;
+
+    small {
+        margin-left: .5rem;
+        font: 400 .8rem system-ui, sans-serif;
+        color: #8b93a7;
+    }
+}

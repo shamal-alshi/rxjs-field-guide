@@ -1,0 +1,19 @@
+<a class="back" routerLink="/">← Back</a>
+<h1>Flattening operators</h1>
+<p class="sub">Click fast. Watch what each operator does with overlapping requests.</p>
+
+<button class="send" (click)="send()">Send request</button>
+
+<section class="board">
+  <app-marble-lane name="clicks" [events]="clicks.events()" />
+
+  @for (lane of lanes; track lane.name) {
+    <div class="lane-block">
+      <app-marble-lane [name]="lane.name" [events]="lane.recorder.events()" />
+      <p class="meta">
+        <span>{{ lane.hint }}</span>
+        <span class="stats">started {{ lane.started() }} · completed {{ lane.completed() }}</span>
+      </p>
+    </div>
+  }
+</section>

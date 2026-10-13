@@ -1,0 +1,39 @@
+<a class="back" routerLink="/">← Back</a>
+<h1>Performance &amp; cleanup</h1>
+
+<h3>1 · Subscription leaks</h3>
+<p class="sub">Mount a ticker, destroy it, and watch the counter. Mount the leaky one repeatedly.</p>
+<div class="controls">
+    <button (click)="showLeaky.set(!showLeaky())">{{ showLeaky() ? 'Destroy' : 'Mount' }} leaky ticker</button>
+    <button (click)="showClean.set(!showClean())">{{ showClean() ? 'Destroy' : 'Mount' }} clean ticker</button>
+</div>
+<section class="board">
+    <p class="big">Active subscriptions: <strong>{{ monitor.active() }}</strong></p>
+    @if (showLeaky()) { <app-leaky-ticker /> }
+    @if (showClean()) { <app-clean-ticker /> }
+</section>
+
+<h3>2 · Taming noisy events</h3>
+<p class="sub">Move your mouse over the box. Compare how many events each operator lets through.</p>
+<div class="zone" (mousemove)="onMove()">Move your mouse here · {{ total() }} events</div>
+<section class="board">
+    @for (lane of lanes; track lane.name) {
+    <div class="block">
+        <app-marble-lane [name]="lane.name" [events]="lane.recorder.events()" [durationMs]="2500" />
+        <p class="meta">
+            <span>{{ lane.hint }}</span>
+            <span class="stats">passed {{ lane.emitted() }}</span>
+        </p>
+    </div>
+    }
+</section>
+
+<h3>3 · shareReplay and refCount</h3>
+<p class="sub">Start watching, then stop. See which source keeps running with nobody listening.</p>
+<div class="controls">
+    <button (click)="toggleWatch()">{{ watching() ? 'Stop watching' : 'Start watching' }}</button>
+</div>
+<section class="board">
+    <p class="stats">shareReplay(1) → source subscriptions: {{ plainActive() }}</p>
+    <p class="stats">shareReplay with refCount: true → source subscriptions: {{ refCountActive() }}</p>
+</section>

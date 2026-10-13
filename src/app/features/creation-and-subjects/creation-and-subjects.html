@@ -1,0 +1,22 @@
+<a class="back" routerLink="/">← Back</a>
+<h1>Subjects</h1>
+<p class="sub">Emit a few values, then let a late subscriber join. See who receives what.</p>
+
+<div class="controls">
+  <button (click)="emit()">Emit next value</button>
+  <button (click)="joinLate()" [disabled]="lateJoined()">Late subscriber joins</button>
+  <button (click)="complete()">Complete</button>
+  <button class="ghost" (click)="reset()">Reset</button>
+</div>
+
+<section class="board">
+  <app-marble-lane name="source" [events]="source().events()" />
+
+  @for (row of rows(); track row.name) {
+    <div class="block">
+      <h2>{{ row.name }} <small>{{ row.hint }}</small></h2>
+      <app-marble-lane name="early" [events]="row.early.events()" />
+      <app-marble-lane name="late" [events]="row.late.events()" />
+    </div>
+  }
+</section>

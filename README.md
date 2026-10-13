@@ -1,59 +1,166 @@
-# RxJsMarbel
+# RxJS Field Guide
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.8.
+> Learn RxJS by watching streams in action.
 
-## Development server
+**RxJS Field Guide** is an interactive learning app that explains RxJS concepts through real-world problems, runnable examples, and animated marble-style visualizations. Instead of memorizing operator definitions, you can see how values move through a stream and how different operators change the result.
 
-To start a local development server, run:
+> **Project status:** In development. Features listed below are planned until implemented.
+
+## Why this project?
+
+RxJS operators can feel abstract when you only read their definitions. This project aims to make them easier to understand by pairing each concept with:
+
+- A practical problem to solve
+- A naive approach and why it can fail
+- A better RxJS solution
+- Code you can read alongside the demo
+- Animated values (“marbles”) moving through a stream
+- Visible event logs and counters where useful
+
+## Planned learning modules
+
+### 1. Creation functions and Subjects
+- `of()` vs `from()`
+- `fromEvent()`, `timer()`, `interval()`, and `defer()`
+- `Subject`, `BehaviorSubject`, `ReplaySubject`, and `AsyncSubject`
+- Cold vs hot Observables
+- Multicasting with `share()` and `shareReplay()`
+
+### 2. Flattening operators
+Compare the same sequence of triggers with:
+- `switchMap` — switch to the latest inner Observable; useful for search
+- `mergeMap` — run inner Observables concurrently; useful for independent work
+- `concatMap` — queue inner Observables and process them in order
+- `exhaustMap` — ignore new triggers while the current inner Observable is active
+
+The visual demo will show active, completed, queued, ignored, and cancelled work where applicable.
+
+### 3. Error handling
+- `catchError()` inside vs outside a flattening operator
+- `retry()` and delayed retries
+- `finalize()`, `EMPTY`, and `throwError()`
+- Representing loading, success, and error states as values
+
+### 4. Performance and cleanup
+- Subscription cleanup with `takeUntilDestroyed()`
+- `async` pipe and `toSignal()`
+- `debounceTime()`, `throttleTime()`, `auditTime()`, and `sampleTime()`
+- `distinctUntilChanged()`
+- `shareReplay({ bufferSize: 1, refCount: true })`
+- Exploring Angular change detection, `OnPush`, and Signals
+
+## What is a marble?
+
+A marble is a visual marker for a value emitted by an Observable. For example, `of(10, 20, 30)` emits three values, so the visualization can show three marbles travelling through a source lane, an operator, and an output lane.
+
+The app will use animation to make stream behaviour visible. RxJS determines when values are emitted; the UI records those events; CSS animates their visual representation.
+
+## Tech stack
+
+Planned stack:
+
+- Angular with standalone components and built-in template control flow (`@if` / `@for`)
+- TypeScript
+- RxJS
+- Angular Signals for local reactive UI state where appropriate
+- HTML and CSS animations
+- Angular Router for learning modules
+
+The initial version is intended to run entirely in the browser. No AI service, backend, or database is required.
+
+## Getting started
+
+### Prerequisites
+
+- Node.js compatible with the Angular version used by this project
+- npm
+- Angular CLI (optional globally; you can also use `npx`)
+
+### Run locally
+
+Once the Angular application has been created or cloned:
 
 ```bash
-ng serve
+npm install
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+If the project does not define an `npm start` script, use:
 
 ```bash
-ng generate component component-name
+npx ng serve
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Then open the local URL printed by the Angular CLI, usually `http://localhost:4200`.
 
-```bash
-ng generate --help
+> These commands assume the Angular project files (`package.json`, `angular.json`, and `src/`) are present in the repository.
+
+## Planned project structure
+
+The exact structure may evolve as the app grows.
+
+```text
+src/
+└── app/
+    ├── core/
+    │   └── marble/
+    │       ├── marble.model.ts
+    │       └── marble-recorder.ts
+    ├── shared/
+    │   └── ui/
+    │       ├── marble-lane/
+    │       ├── demo-panel/
+    │       └── code-block/
+    ├── features/
+    │   ├── landing/
+    │   ├── creation-and-subjects/
+    │   ├── flattening/
+    │   ├── error-handling/
+    │   └── performance/
+    ├── app.config.ts
+    └── app.routes.ts
 ```
 
-## Building
+### Architecture at a glance
 
-To build the project run:
+- **Feature pages** explain a concept and configure its demo.
+- **Demo panel** brings together the problem, code, event log, and counters.
+- **Marble lane** displays and animates recorded events.
+- **Marble recorder** captures relevant event information for the visualizer.
+- **Angular Router** loads feature pages as needed.
 
-```bash
-ng build
-```
+The visual layer should explain the stream, not replace the real RxJS implementation. Each demo should be driven by the actual Observable pipeline wherever practical.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Development roadmap
 
-## Running unit tests
+- [ ] Create the Angular app and establish the visual theme
+- [ ] Build the landing page and navigation
+- [ ] Build a reusable animated marble lane
+- [ ] Add Run and Reset controls
+- [ ] Demonstrate a simple source and transformation (`of()` + `map()`)
+- [ ] Build the four flattening-operator comparison lanes
+- [ ] Add error-handling demos
+- [ ] Add Subjects and cold-vs-hot demos
+- [ ] Add performance and subscription-cleanup demos
+- [ ] Add responsive styling, accessibility checks, and reduced-motion support
+- [ ] Write tests and document lessons learned
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Learning goals
 
-```bash
-ng test
-```
+By building this project, I want to strengthen my understanding of:
 
-## Running end-to-end tests
+- Observable creation and subscription behaviour
+- RxJS operator selection and composition
+- Cancellation, concurrency, and sequencing
+- Error handling and stream recovery
+- Subscription lifecycle and performance
+- Angular standalone architecture, Signals, and change detection
+- Reusable components and data-driven UI design
 
-For end-to-end (e2e) testing, run:
+## Contributing
 
-```bash
-ng e2e
-```
+This is a personal learning and portfolio project. Suggestions and constructive feedback are welcome.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## License
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+A license has not been selected yet. Add a `LICENSE` file before presenting the project as open source.

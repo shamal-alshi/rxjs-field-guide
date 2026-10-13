@@ -1,0 +1,41 @@
+<a class="back" routerLink="/">← Back</a>
+<h1>Error handling</h1>
+<p class="sub">Every 3rd request fails. Where you put the handling decides what survives.</p>
+
+<h3>1 · catchError: outside vs inside switchMap</h3>
+<p class="sub">Click Search 3 times. Then keep clicking and see which lane still responds.</p>
+<div class="controls"><button (click)="search()">Search</button></div>
+<section class="board">
+    <app-marble-lane name="clicks" [events]="clicks.events()" />
+    @for (lane of lanes; track lane.name) {
+    <div class="block">
+        <h2>{{ lane.name }} <small>{{ lane.hint }}</small></h2>
+        <app-marble-lane name="result" [events]="lane.recorder.events()" />
+        <p class="stats">stream: {{ lane.alive() ? 'alive' : 'DEAD (ignores clicks)' }}</p>
+    </div>
+    }
+</section>
+
+<h3>2 · retry with exponential backoff</h3>
+<p class="sub">Fails twice, succeeds on attempt 3. Waits 500ms, then 1000ms between attempts.</p>
+<div class="controls"><button (click)="runRetry()">Run flaky call</button></div>
+<section class="board">
+    <app-marble-lane name="result" [events]="retryRec.events()" />
+    <p class="stats">attempts made: {{ attempts() }}</p>
+</section>
+
+<h3>3 · Errors as values</h3>
+<p class="sub">The stream never dies. The UI just reads a state object. Every 3rd click fails.</p>
+<div class="controls"><button (click)="load()">Load</button></div>
+<section class="board">
+    @let s = state();
+    @if (s.status === 'idle') {
+    <p class="big">Press Load.</p>
+    } @else if (s.status === 'loading') {
+    <p class="big">Loading…</p>
+    } @else if (s.status === 'success') {
+    <p class="big">✅ Got <strong>{{ s.data }}</strong></p>
+    } @else if (s.status === 'error') {
+    <p class="big">❌ {{ s.message }}</p>
+    }
+</section>

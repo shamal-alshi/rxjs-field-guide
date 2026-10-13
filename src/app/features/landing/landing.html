@@ -1,0 +1,20 @@
+<header class="hero">
+  <p class="eyebrow">RxJS Field Guide</p>
+  <h1>Stop guessing which operator to use.</h1>
+  <p class="sub">Every topic starts with a real problem, shows the version that breaks, then the fix, live.</p>
+
+  <div class="demo" aria-label="Live demo: interval piped through map">
+    <app-marble-lane name="interval(1200)" [events]="source.events()" />
+    <code class="op">map(n =&gt; n * 10)</code>
+    <app-marble-lane name="output" [events]="output.events()" />
+  </div>
+</header>
+
+<section class="topics">
+  @for (t of topics; track t.path) {
+    <a class="card" [routerLink]="t.path">
+      <h2>{{ t.title }}</h2>
+      <p>{{ t.question }}</p>
+    </a>
+  }
+</section>

@@ -1,1 +1,121 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    margin: 0;
+    background: #0b0e17;
+    color: #e2e8f0;
+    font-family: system-ui, sans-serif;
+}
+
+.page {
+    display: block;
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+    max-width: 56rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.page .back {
+    color: #5eead4;
+    text-decoration: none;
+    font-size: .9rem;
+}
+
+.page h1 {
+    margin: .75rem 0 .25rem;
+}
+
+.page h3 {
+    margin: 2.5rem 0 .25rem;
+    font-size: 1.2rem;
+}
+
+.page .sub {
+    color: #8b93a7;
+    margin: 0 0 1.25rem;
+}
+
+.page .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+}
+
+.page button {
+    padding: .6rem 1.1rem;
+    border: 0;
+    border-radius: .6rem;
+    background: #5eead4;
+    color: #0b0e17;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.page button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.page button.ghost {
+    background: transparent;
+    color: #8b93a7;
+    border: 1px solid #2a3042;
+}
+
+.page .board {
+    margin-top: 1rem;
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    border: 1px solid #2a3042;
+    border-radius: 1rem;
+    background: #11151f;
+}
+
+.page .block {
+    display: grid;
+    gap: .25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #1b2132;
+}
+
+.page .block:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.page h2 {
+    margin: 0 0 .25rem;
+    font: 600 .95rem ui-monospace, monospace;
+    color: #fbbf24;
+}
+
+.page h2 small {
+    margin-left: .5rem;
+    font: 400 .8rem system-ui, sans-serif;
+    color: #8b93a7;
+}
+
+.page .meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: .25rem 0 0 6.5rem;
+    font-size: .8rem;
+    color: #8b93a7;
+}
+
+.page .stats {
+    margin: 0;
+    font: .8rem ui-monospace, monospace;
+    color: #fbbf24;
+}
+
+.page .big {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.page .big strong {
+    color: #5eead4;
+    font-size: 1.6rem;
+}
