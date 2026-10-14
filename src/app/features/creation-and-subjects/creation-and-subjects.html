@@ -27,6 +27,7 @@
     </div>
   </div>
   <div class="demo-body">
+    <app-lane-legend />
     <div class="controls">
       <button (click)="emit()">Send a value</button>
       <button class="ghost" (click)="joinLate()" [disabled]="lateJoined()">Add late listener</button>

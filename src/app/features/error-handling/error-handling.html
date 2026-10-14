@@ -27,6 +27,7 @@
     </div>
   </div>
   <div class="demo-body">
+    <app-lane-legend />
     <div class="controls"><button (click)="search()">Search again</button></div>
     <section class="board">
       <app-marble-lane name="search clicks" [events]="clicks.events()" />
@@ -41,7 +42,7 @@
     <aside class="takeaway">
       <h2>Rule of thumb</h2>
       <p>For user-triggered requests, put catchError inside the flattening operator. That handles one request’s failure without replacing or ending the outer click stream.</p>
-    </aside>
+    </section>
   </div>
 </section>
 

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { defer, map, Observable, share, shareReplay, Subject, takeUntil, timer } from 'rxjs';
 import { MarbleLane } from '../../shared/ui/marble-lane/marble-lane';
 import { MarbleRecorder, recordTo } from '../../core/marble-recorder';
+import { LaneLegend } from '../../shared/ui/lane-lagend/lane-lagend';
 
 interface Variant {
   name: string;
@@ -16,7 +17,7 @@ interface Variant {
 
 @Component({
   selector: 'app-cold-and-hot',
-  imports: [MarbleLane, RouterLink],
+  imports: [MarbleLane, LaneLegend, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   templateUrl: './cold-and-hot.html',

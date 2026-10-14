@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AsyncSubject, BehaviorSubject, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { MarbleLane } from '../../shared/ui/marble-lane/marble-lane';
 import { MarbleRecorder, recordTo } from '../../core/marble-recorder';
+import { LaneLegend } from '../../shared/ui/lane-lagend/lane-lagend';
 
 interface Row {
   name: string;
@@ -15,7 +16,7 @@ interface Row {
 
 @Component({
   selector: 'app-creation-and-subjects',
-  imports: [MarbleLane, RouterLink],
+  imports: [MarbleLane, LaneLegend, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   templateUrl: './creation-and-subjects.html',

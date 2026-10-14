@@ -46,6 +46,22 @@ const TOPICS = [
     example: 'Subscriptions, mouse events, and cached data.',
     tag: 'BEST PRACTICES',
   },
+    {
+    path: 'creating-observables',
+    number: '01',
+    title: 'Creating observables',
+    question: 'What do of, from and interval actually do?',
+    example: 'Mock data, fallbacks, turning a Promise or array into a stream.',
+    tag: 'THE BASICS',
+  },
+  {
+    path: 'tap',
+    number: '02',
+    title: 'tap: peek without touching',
+    question: 'How do I log or show a spinner without changing values?',
+    example: 'Debugging, loading spinners, analytics.',
+    tag: 'THE BASICS',
+  },
 ];
 
 @Component({
@@ -62,7 +78,7 @@ export class Landing {
   protected readonly topics = TOPICS;
 
   constructor() {
-    interval(1200)
+    interval(2000)
       .pipe(
         recordTo(this.source),
         map((n) => n * 10),

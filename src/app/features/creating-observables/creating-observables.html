@@ -1,0 +1,167 @@
+<a class="back" routerLink="/">← All topics</a>
+<header class="lesson-hero">
+  <p class="eyebrow">01 · Creating observables</p>
+  <h1>Where do streams come from?</h1>
+  <p class="sub">Before you can map, filter or switch anything, you need an Observable. Creation functions like <code>of</code> and <code>from</code> turn everyday things (values, arrays, Promises) into streams.</p>
+</header>
+
+<section class="lesson-intro">
+  <article class="definition-card">
+    <p class="section-kicker">In plain language</p>
+    <h2>An Observable is a show. subscribe() is the play button.</h2>
+    <p>An Observable describes values that arrive over time. It sits on the shelf doing nothing until someone presses play with <code>subscribe()</code>. Creation functions are the quick ways to put a show on the shelf: <code>of</code> and <code>from</code> for values you already have, <code>interval</code> for a clock, <code>throwError</code> for a failure.</p>
+  </article>
+  <aside class="scenario-card">
+    <p class="section-kicker">Real-world example</p>
+    <h2>A music playlist</h2>
+    <p><code>of(song1, song2)</code> is "queue exactly these songs". <code>from(album)</code> is "open this album and queue every track inside". Nothing plays until you press play.</p>
+  </aside>
+</section>
+
+<section class="kinds" aria-labelledby="kinds-title">
+  <p class="section-kicker">First, the vocabulary</p>
+  <h2 id="kinds-title">A stream can only tell you three things</h2>
+  <div class="kind-grid">
+    <div class="kind-card">
+      <span class="kind-dot good" aria-hidden="true"></span>
+      <h3>next</h3>
+      <p>"Here is a value." It can happen zero, one or many times.</p>
+    </div>
+    <div class="kind-card">
+      <span class="kind-dot bad" aria-hidden="true"></span>
+      <h3>error</h3>
+      <p>"Something went wrong." The stream ends right here, and no more values come.</p>
+    </div>
+    <div class="kind-card">
+      <span class="kind-dot end" aria-hidden="true"></span>
+      <h3>complete</h3>
+      <p>"I'm finished, no more values." Some streams, like a clock, never complete.</p>
+    </div>
+  </div>
+</section>
+
+<section class="demo-card" aria-labelledby="creators-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Interactive lab 1</p>
+      <h2 id="creators-title">Pick a creator, press Subscribe, and watch</h2>
+      <p>Values light up one box at a time, and a sentence underneath tells you what just happened. Try them in order. The second tab is the one that surprises everyone.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <app-lane-legend />
+    <div class="tabs" role="tablist" aria-label="Choose a creation function">
+      @for (c of creators; track c.tab; let i = $index) {
+        <button type="button" role="tab" class="tab" [class.active]="selected() === i" [attr.aria-selected]="selected() === i" (click)="select(i)">{{ c.tab }}</button>
+      }
+    </div>
+
+    <app-code [code]="current().code" label="Code for the selected creation function" />
+
+    <p class="plain"><strong>What it does:</strong> {{ current().plain }}</p>
+    <p class="expect"><strong>You'll see:</strong> {{ current().result }}</p>
+
+    <div class="controls">
+      <button type="button" (click)="run()">▶ Subscribe</button>
+    </div>
+
+    <app-conveyor [stations]="stations" [log]="log" />
+  </div>
+</section>
+
+<section class="callout pitfall" aria-labelledby="ofvsfrom-title">
+  <p class="section-kicker">The mix-up everybody makes</p>
+  <h2 id="ofvsfrom-title">of vs from</h2>
+  <p>Both give you an Observable, but they treat what you hand them differently.</p>
+  <div class="table-wrap">
+    <table class="compare">
+      <thead>
+        <tr><th></th><th><code>of(…)</code></th><th><code>from(…)</code></th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">You give it</th><td>Values, listed one by one</td><td>One thing that contains values: an array, a string, a Promise</td></tr>
+        <tr><th scope="row">With <code>[1, 2, 3]</code></th><td>Emits 1 value: the array</td><td>Emits 3 values: 1, then 2, then 3</td></tr>
+        <tr><th scope="row">Think of it as</th><td>"Emit exactly what I list"</td><td>"Open it up and emit what's inside"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tip"><strong>Rule of thumb:</strong> if you'd write a <code>for…of</code> loop over it, use <code>from</code>. If you're listing the values yourself, use <code>of</code>.</p>
+</section>
+
+<section class="demo-card" aria-labelledby="lazy-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Interactive lab 2</p>
+      <h2 id="lazy-title">Nothing happens until you subscribe</h2>
+      <p>This is the idea beginners miss most. Creating an Observable does nothing at all. Every <code>subscribe()</code> starts its own fresh run.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <app-code [code]="lazyCode" [active]="lazyLine()" label="Code showing creating and then subscribing" />
+    <div class="controls">
+      <button type="button" (click)="createIt()" [disabled]="created()">1 · Create it</button>
+      <button type="button" (click)="subscribeToIt()" [disabled]="!created()">2 · Subscribe</button>
+      <button type="button" class="ghost" (click)="resetLazy()">Start over</button>
+    </div>
+    <app-conveyor [stations]="stations" [log]="lazyLog" />
+    @if (runs() > 0) {
+      <p class="stats">Subscriptions so far: {{ runs() }}. Each one ran the whole thing again.</p>
+    }
+  </div>
+</section>
+
+<section class="uses" aria-labelledby="uses-title">
+  <p class="section-kicker">In real apps</p>
+  <h2 id="uses-title">Where you'll actually use these</h2>
+  <div class="usecase-grid">
+    <article class="usecase">
+      <code>of(mockUsers)</code>
+      <h3>Fake data while the backend isn't ready</h3>
+      <p>An HTTP call returns a whole list as one value, so <code>of(listOfUsers)</code> (one emission) is the right stand-in. It's also common in tests.</p>
+    </article>
+    <article class="usecase">
+      <code>catchError(() =&gt; of([]))</code>
+      <h3>A safe fallback when a request fails</h3>
+      <p>If loading products fails, switch to an empty list instead of crashing the screen. You'll use this in the Errors lesson.</p>
+    </article>
+    <article class="usecase">
+      <code>from(files).pipe(concatMap(upload))</code>
+      <h3>Handle a list one item at a time</h3>
+      <p>Turn a list of files or IDs into a stream, then upload, fetch or process them one after another.</p>
+    </article>
+    <article class="usecase">
+      <code>from(navigator.clipboard.readText())</code>
+      <h3>Use a Promise inside a pipeline</h3>
+      <p>Browser APIs and many libraries return Promises. <code>from</code> lets you mix them with the rest of your RxJS code.</p>
+    </article>
+    <article class="usecase">
+      <code>interval(5000)</code>
+      <h3>Poll an API every 5 seconds</h3>
+      <p>Use <code>timer(3000)</code> for a one-time delay, like hiding a toast message after three seconds.</p>
+    </article>
+    <article class="usecase">
+      <code>fromEvent(button, 'click')</code>
+      <h3>Turn clicks and keys into streams</h3>
+      <p>Mouse moves, key presses and scrolling become streams you can debounce, filter and combine. You'll see this in the Performance lesson.</p>
+    </article>
+  </div>
+</section>
+
+<section class="quiz" aria-labelledby="quiz-title">
+  <p class="section-kicker">Check yourself</p>
+  <h2 id="quiz-title">Can you predict it? Think first, then open the answer.</h2>
+  <details>
+    <summary>What does <code>of([1, 2, 3])</code> emit?</summary>
+    <p>One value: the whole array <code>[1, 2, 3]</code>, and then complete. <code>of</code> doesn't unpack anything. To get three separate numbers, use <code>from([1, 2, 3])</code> or <code>of(1, 2, 3)</code>.</p>
+  </details>
+  <details>
+    <summary>You write <code>const data$ = of(1, 2, 3);</code> and never call subscribe. How many values are emitted?</summary>
+    <p>None. Observables are lazy: until someone subscribes, no work happens. (The <code>$</code> at the end of the name is just a naming habit for "this is an Observable".)</p>
+  </details>
+  <details>
+    <summary>When does <code>interval(1000)</code> complete?</summary>
+    <p>Never. It ticks forever, so you either add <code>take(n)</code>, or you must unsubscribe when you're done, or the timer keeps running. The Performance lesson shows what happens when you forget.</p>
+  </details>
+</section>
+
+<a class="topic-next" routerLink="/tap">Next up: tap, peeking at a stream →</a>

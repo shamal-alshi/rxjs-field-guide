@@ -16,7 +16,7 @@
 h1 {
   margin: 0 0 1.15rem;
   color: var(--ink);
-  font-size: clamp(2.65rem, 6.4vw, 4.8rem);
+  font-size: 4.3rem;
   letter-spacing: -.065em;
   line-height: 1.03;
 }
@@ -44,7 +44,7 @@ h1 span { color: var(--purple-dark); }
   gap: 2rem; margin-bottom: 1.15rem;
 }
 .section-heading .section-kicker { margin-bottom: .45rem; }
-.section-heading h2 { margin: 0; color: var(--ink); font-size: clamp(1.45rem, 3vw, 1.9rem); letter-spacing: -.04em; }
+.section-heading h2 { margin: 0; color: var(--ink); font-size: 1.9rem; letter-spacing: 0; }
 .section-heading > p { max-width: 23rem; margin: 0 0 .15rem; color: var(--muted); font-size: .88rem; line-height: 1.6; }
 .demo {
   display: grid; gap: .3rem; padding: 1.3rem 1.5rem;
@@ -82,6 +82,8 @@ h1 span { color: var(--purple-dark); }
 
 @media (max-width: 860px) { .topics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 680px) {
+  h1 { font-size: 2.65rem; }
+  .section-heading h2 { font-size: 1.5rem; }
   .hero { grid-template-columns: 1fr; gap: 1.5rem; padding-top: .5rem; }
   .hero-note-card { max-width: 32rem; }
   .section-heading { align-items: flex-start; flex-direction: column; gap: .55rem; }

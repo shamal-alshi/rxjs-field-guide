@@ -1,0 +1,159 @@
+<a class="back" routerLink="/">← All topics</a>
+<header class="lesson-hero">
+  <p class="eyebrow">02 · tap</p>
+  <h1>How do I peek at a stream without touching it?</h1>
+  <p class="sub"><code>tap</code> lets you look at every value passing by and do something on the side, like logging it or switching a spinner on, while the values continue on their way exactly as they were.</p>
+</header>
+
+<section class="lesson-intro">
+  <article class="definition-card">
+    <p class="section-kicker">In plain language</p>
+    <h2>tap is a security camera on a conveyor belt.</h2>
+    <p>The camera watches every parcel and can record or raise an alarm, but it never changes, removes or adds a parcel. In RxJS terms, <code>tap</code> runs your function for each value (a <b>side effect</b>) and then passes the original value along untouched.</p>
+  </article>
+  <aside class="scenario-card">
+    <p class="section-kicker">Real-world example</p>
+    <h2>A shop receipt printer</h2>
+    <p>Every sale passes through the till. The printer prints a receipt on the side, but the sale itself, its items and total, goes on exactly the same.</p>
+  </aside>
+</section>
+
+<section class="demo-card" aria-labelledby="tap-lab-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Interactive lab 1</p>
+      <h2 id="tap-lab-title">Follow three numbers through a pipeline</h2>
+      <p>Box 2 (<code>map</code>) changes values. Box 3 (<code>tap</code>) only peeks: watch its yellow side door. The highlighted line in the code shows where you are.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <app-code [code]="pipeCode()" [active]="activeLine()" label="A pipeline with map and tap" />
+
+    <div class="controls">
+      <button type="button" (click)="run()">▶ Send 1, 2, 3 through</button>
+      <button type="button" class="ghost" (click)="toggleTry()" [attr.aria-pressed]="tryToChange()">
+        {{ tryToChange() ? '✓ tap is trying to change values' : 'Make tap try to change the values' }}
+      </button>
+    </div>
+
+    <app-conveyor [stations]="stations" [log]="log" />
+
+    @if (tryToChange()) {
+      <p class="plain"><strong>Look closely:</strong> tap returned <code>n * 100</code> every time, yet the Subscriber still got 10, 20, 30. The return value of tap is thrown away. To change values, use <code>map</code>.</p>
+    }
+  </div>
+</section>
+
+<section class="demo-card" aria-labelledby="spinner-title">
+  <div class="demo-heading">
+    <div>
+      <p class="section-kicker">Interactive lab 2</p>
+      <h2 id="spinner-title">The most common use: a loading spinner</h2>
+      <p>Press the button. A <code>tap</code> before the request switches the spinner on, and a <code>tap</code> after the response switches it off.</p>
+    </div>
+  </div>
+  <div class="demo-body">
+    <app-code [code]="spinnerCode" label="Using tap to show and hide a loading spinner" />
+    <div class="mini-app">
+      <div class="mini-top">
+        <button type="button" (click)="loadUsers()">Load users</button>
+        <span class="flag" [class.on]="loading()">loading = {{ loading() }}</span>
+      </div>
+      <div class="mini-body" aria-live="polite">
+        @if (loading()) {
+          <span class="spinner" aria-hidden="true"></span> <span>Fetching users…</span>
+        } @else if (users().length) {
+          <ul class="people">
+            @for (u of users(); track u) {
+              <li>{{ u }}</li>
+            }
+          </ul>
+        } @else {
+          <span class="muted">No users yet. Press the button.</span>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="callout" aria-labelledby="observer-title">
+  <p class="section-kicker">Good to know</p>
+  <h2 id="observer-title">tap can watch next, error and complete</h2>
+  <p>Pass a single function to watch values, or pass an object to watch all three things a stream can tell you.</p>
+  <app-code [code]="observerCode" label="tap with next, error and complete" />
+  <p class="tip">Every box in this guide's animations is built from this exact idea. A small helper called <code>flowTap</code> wraps <code>tap</code> to record what it sees, and the page replays it slowly so you can follow along.</p>
+</section>
+
+<section class="uses" aria-labelledby="tap-uses-title">
+  <p class="section-kicker">In real apps</p>
+  <h2 id="tap-uses-title">When to reach for tap</h2>
+  <div class="usecase-grid">
+    <article class="usecase">
+      <code>tap(console.log)</code>
+      <h3>Debugging: "where did my value go?"</h3>
+      <p>Drop a tap between two operators to see what is flowing through that spot. Remove it when you're done.</p>
+    </article>
+    <article class="usecase">
+      <code>tap(() =&gt; loading.set(true))</code>
+      <h3>Loading flags</h3>
+      <p>Turn a spinner on before a request starts and off when the response arrives, as in the lab above.</p>
+    </article>
+    <article class="usecase">
+      <code>tap(order =&gt; analytics.track(order))</code>
+      <h3>Analytics and logging</h3>
+      <p>Report "user searched for X" without touching the data that continues to your screen.</p>
+    </article>
+    <article class="usecase">
+      <code>tap(cart =&gt; localStorage.setItem(…))</code>
+      <h3>Saving as you go</h3>
+      <p>Store the latest value in the browser while the same value keeps flowing to the UI.</p>
+    </article>
+  </div>
+</section>
+
+<section class="callout pitfall" aria-labelledby="tap-pitfalls-title">
+  <p class="section-kicker">Watch out</p>
+  <h2 id="tap-pitfalls-title">Four mistakes to avoid</h2>
+  <ol class="pitfalls">
+    <li><b>Using tap to change a value.</b> Its return value is ignored. Use <code>map</code> for that.</li>
+    <li><b>Expecting tap to run on its own.</b> No subscriber means no run at all, because Observables are lazy.</li>
+    <li><b>Hiding important logic inside it.</b> If your app needs the result of an action, do it in <code>subscribe</code> or a proper operator. Keep tap for small side jobs.</li>
+    <li><b>Letting it throw.</b> If your function inside tap throws an error, the whole stream fails.</li>
+  </ol>
+</section>
+
+<section class="callout" aria-labelledby="tap-compare-title">
+  <p class="section-kicker">Quick comparison</p>
+  <h2 id="tap-compare-title">tap vs map vs subscribe</h2>
+  <div class="table-wrap">
+    <table class="compare">
+      <thead>
+        <tr><th></th><th><code>tap</code></th><th><code>map</code></th><th><code>subscribe</code></th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Job</th><td>Do a side job mid-stream</td><td>Transform each value</td><td>Receive the final result</td></tr>
+        <tr><th scope="row">Changes the value?</th><td>No</td><td>Yes</td><td>It's the end of the line</td></tr>
+        <tr><th scope="row">Sits</th><td>Inside <code>pipe()</code></td><td>Inside <code>pipe()</code></td><td>After <code>pipe()</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="quiz" aria-labelledby="tap-quiz-title">
+  <p class="section-kicker">Check yourself</p>
+  <h2 id="tap-quiz-title">Predict first, then open the answer.</h2>
+  <details>
+    <summary>What does the subscriber receive from <code>of(1, 2).pipe(tap(n =&gt; n * 100))</code>?</summary>
+    <p>Just 1 and 2. tap ignores what your function returns, so the values pass through unchanged.</p>
+  </details>
+  <details>
+    <summary>You write <code>source$.pipe(tap(console.log))</code> and never subscribe. What gets logged?</summary>
+    <p>Nothing. Without a subscriber the pipeline never runs, so tap never gets a value to look at.</p>
+  </details>
+  <details>
+    <summary>You want to turn prices in dollars into prices in rupees. tap or map?</summary>
+    <p>map. You're changing the value, and only <code>map</code> (or another transforming operator) can do that.</p>
+  </details>
+</section>
+
+<a class="topic-next" routerLink="/creation-and-subjects">Next up: Subjects and shared state →</a>

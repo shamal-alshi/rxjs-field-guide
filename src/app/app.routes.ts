@@ -14,5 +14,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/error-handling/error-handling').then((m) => m.ErrorHandling),
     },
     { path: 'performance', loadComponent: () => import('./features/performance/performance').then((m) => m.Performance) },
+    {
+        path: 'creating-observables',
+        loadComponent: () =>
+            import('./features/creating-observables/creating-observables').then((m) => m.CreatingObservables),
+    },
+    { path: 'tap', loadComponent: () => import('./features/tap/tap').then((m) => m.TapLesson) },
     { path: '**', redirectTo: '' },
+
 ];

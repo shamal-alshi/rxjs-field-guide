@@ -5,6 +5,7 @@ import { concatMap, defer, exhaustMap, mergeMap, Observable, Subject, switchMap,
 import { MarbleLane } from '../../shared/ui/marble-lane/marble-lane';
 import { fakeRequest } from '../../core/fake-request';
 import { MarbleRecorder, recordTo } from '../../core/marble-recorder';
+import { LaneLegend } from '../../shared/ui/lane-lagend/lane-lagend';
 
 type Flatten = (project: (id: number) => Observable<number>) => (source: Observable<number>) => Observable<number>;
 
@@ -18,7 +19,7 @@ interface Lane {
 
 @Component({
   selector: 'app-flattening',
-  imports: [MarbleLane, RouterLink],
+  imports: [MarbleLane, LaneLegend, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   templateUrl: './flattening.html',

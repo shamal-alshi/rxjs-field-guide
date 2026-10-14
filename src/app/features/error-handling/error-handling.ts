@@ -9,6 +9,7 @@ import {
 import { MarbleLane } from '../../shared/ui/marble-lane/marble-lane';
 import { flakyRequest } from '../../core/fake-request';
 import { MarbleRecorder, recordTo } from '../../core/marble-recorder';
+import { LaneLegend } from '../../shared/ui/lane-lagend/lane-lagend';
 
 interface SearchLane {
   name: string;
@@ -25,7 +26,7 @@ type LoadState =
 
 @Component({
   selector: 'app-error-handling',
-  imports: [MarbleLane, RouterLink],
+  imports: [MarbleLane, LaneLegend, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   templateUrl: './error-handling.html',
